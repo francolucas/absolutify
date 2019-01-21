@@ -39,7 +39,11 @@ defmodule Absolutify.Authentication do
     |> Credentials.new(credentials)
   end
 
-  defp handle_response({:ok, %HTTPoison.Response{body: response, status_code: status_code}}, credentials) when status_code >= 400 and status_code < 500 do
+  defp handle_response(
+         {:ok, %HTTPoison.Response{body: response, status_code: status_code}},
+         _credentials
+       )
+       when status_code >= 400 do
     response
     |> Poison.decode!()
     |> auth_error()
