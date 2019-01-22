@@ -10,6 +10,7 @@ defmodule Absolutify.Credentials do
   end
 
   def is_expired?(%Credentials{valid_until: nil}), do: true
+
   def is_expired?(%Credentials{valid_until: valid_until}) do
     :os.system_time(:seconds) > valid_until
   end

@@ -1,4 +1,6 @@
 defmodule Absolutify.Radio do
+  alias Absolutify.Track
+
   @url "https://absoluteradio.co.uk/_ajax/recently-played.php"
   @headers ["Content-Type": "application/x-www-form-urlencoded"]
 
@@ -34,10 +36,6 @@ defmodule Absolutify.Radio do
          "AllTrackTitle" => track,
          "EventTimestamp" => timestamp
        }) do
-    %{
-      artist_name: artist,
-      track_title: track,
-      event_time: timestamp
-    }
+    Track.new(timestamp, artist, track)
   end
 end
