@@ -52,4 +52,8 @@ defmodule Absolutify.Authentication do
   defp auth_error(%{"error_description" => error_description}) do
     raise error_description
   end
+
+  defp auth_error(_error) do
+    raise "Could not authenticate"
+  end
 end
