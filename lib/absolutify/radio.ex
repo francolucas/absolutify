@@ -5,37 +5,59 @@ defmodule Absolutify.Radio do
   @headers ["Content-Type": "application/x-www-form-urlencoded"]
 
   def last_track() do
-    latest_tracks()
-    |> hd()
+    case latest_tracks() do
+      {:ok, latest_tracks} -> {:ok, hd(latest_tracks)}
+      error -> error
+    end
   end
 
   def latest_tracks() do
-    body = request_body()
-
-    HTTPoison.post(@url, body, @headers)
-    |> handle_response()
+    with {:ok, response} <- HTTPoison.post(@url, body(), @headers),
+         {:ok, result} <- handle_response(response),
+         {:ok, tracks} <- build_tracks(result) do
+      {:ok, tracks}
+    else
+      error -> error
+    end
   end
 
-  defp request_body do
+  defp body() do
     "lastTime=#{System.system_time(:second)}&serviceID=1&mode=more&searchTerm="
   end
 
-  defp handle_response({:ok, %HTTPoison.Response{body: response, status_code: 200}})
-       when is_binary(response) do
+  defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do
     response
     |> Poison.decode()
-    |> build_tracks()
   end
 
-  defp build_tracks({:ok, %{"events" => tracks}}) when is_list(tracks) do
-    Enum.map(tracks, &build_track/1)
+  defp handle_response(_response), do: {:error, "Could not connect to the radio server"}
+
+  defp build_tracks(%{"events" => track_list}) when is_list(track_list) do
+    track_list
+    |> Enum.map(&build_track/1)
+    |> validate_track_list
   end
+
+  defp build_tracks(_result), do: {:error, "Unexpected result from the radio server"}
 
   defp build_track(%{
          "ArtistName" => artist,
-         "AllTrackTitle" => track,
-         "EventTimestamp" => timestamp
+         "AllTrackTitle" => title,
+         "EventTimestamp" => played_at
        }) do
-    Track.new(timestamp, artist, track)
+    Track.new(played_at, artist, title)
+  end
+
+  defp build_track(_event), do: nil
+
+  defp validate_track_list(tracks) do
+    track_list =
+      tracks
+      |> Enum.filter(&(!is_nil(&1)))
+
+    case track_list do
+      [] -> {:error, "There is no valid track in this request to the radio server"}
+      _ -> {:ok, track_list}
+    end
   end
 end
