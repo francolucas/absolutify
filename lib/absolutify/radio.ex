@@ -22,7 +22,7 @@ defmodule Absolutify.Radio do
   end
 
   defp body() do
-    "lastTime=#{System.system_time(:second)}&serviceID=1&mode=more&searchTerm="
+    "lastTime=#{:os.system_time(:second)}&serviceID=1&mode=more&searchTerm="
   end
 
   defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do

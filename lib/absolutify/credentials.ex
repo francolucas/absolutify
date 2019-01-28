@@ -12,7 +12,8 @@ defmodule Absolutify.Credentials do
   def is_expired?(%Credentials{valid_until: nil}), do: true
 
   def is_expired?(%Credentials{valid_until: valid_until}) do
-    :os.system_time(:seconds) > valid_until
+    now = :os.system_time(:seconds) |> DateTime.from_unix!(:second)
+    now > valid_until
   end
 
   defp refresh_token(%Credentials{} = credentials, %{"refresh_token" => refresh_token}) do
@@ -22,7 +23,10 @@ defmodule Absolutify.Credentials do
   defp refresh_token(credentials, _response), do: credentials
 
   defp valid_until(%Credentials{} = credentials, %{"expires_in" => expires_in}) do
-    valid_until = :os.system_time(:seconds) + expires_in - 60
+    valid_until =
+      (:os.system_time(:seconds) + expires_in - 60)
+      |> DateTime.from_unix!(:second)
+
     Map.put(credentials, :valid_until, valid_until)
   end
 

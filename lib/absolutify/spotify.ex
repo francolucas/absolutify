@@ -3,7 +3,7 @@ defmodule Absolutify.Spotify do
 
   @url "https://api.spotify.com/v1"
 
-  def search_track(credentials, track) do
+  def search_track(credentials, %Track{spotify_uri: nil} = track) do
     with {:ok, response} <- do_search_request(credentials, track),
          {:ok, result} <- handle_response(response),
          {:ok, spotify_track} <- first_result(result) do
@@ -12,6 +12,8 @@ defmodule Absolutify.Spotify do
       error -> error
     end
   end
+
+  def search_track(_credentials, track), do: {:ok, track}
 
   defp do_search_request(credentials, %Track{artist: artist, title: title})
        when not is_nil(artist) and not is_nil(title) do
