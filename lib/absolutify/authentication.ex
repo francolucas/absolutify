@@ -4,6 +4,13 @@ defmodule Absolutify.Authentication do
   @url "https://accounts.spotify.com/api/token"
 
   def auth(%Credentials{} = credentials) do
+    case Credentials.is_expired?(credentials) do
+      true -> re_auth(credentials)
+      false -> {:ok, credentials}
+    end
+  end
+
+  defp re_auth(%Credentials{} = credentials) do
     HTTPoison.post(@url, body(credentials), headers())
     |> handle_response(credentials)
   end
@@ -49,11 +56,8 @@ defmodule Absolutify.Authentication do
     |> auth_error()
   end
 
-  defp auth_error(%{"error_description" => error_description}) do
-    raise error_description
-  end
+  defp auth_error(%{"error_description" => error_description}),
+    do: {:auth_error, error_description}
 
-  defp auth_error(_error) do
-    raise "Could not authenticate"
-  end
+  defp auth_error(_error), do: {:auth_error, "Could not authenticate"}
 end

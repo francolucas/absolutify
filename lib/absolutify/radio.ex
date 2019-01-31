@@ -6,7 +6,7 @@ defmodule Absolutify.Radio do
 
   def last_track() do
     case latest_tracks() do
-      {:ok, latest_tracks} -> {:ok, hd(latest_tracks)}
+      {:ok, [track | _tracks]} -> {:ok, track}
       error -> error
     end
   end
@@ -30,7 +30,7 @@ defmodule Absolutify.Radio do
     |> Poison.decode()
   end
 
-  defp handle_response(_response), do: {:error, "Could not connect to the radio server"}
+  defp handle_response(_response), do: {:error, "Could not connect to the radio server."}
 
   defp build_tracks(%{"events" => track_list}) when is_list(track_list) do
     track_list
@@ -38,7 +38,7 @@ defmodule Absolutify.Radio do
     |> validate_track_list
   end
 
-  defp build_tracks(_result), do: {:error, "Unexpected result from the radio server"}
+  defp build_tracks(_result), do: {:error, "Not expected result format from the radio server."}
 
   defp build_track(%{
          "ArtistName" => artist,
@@ -56,7 +56,7 @@ defmodule Absolutify.Radio do
       |> Enum.filter(&(!is_nil(&1)))
 
     case track_list do
-      [] -> {:error, "There is no valid track in this request to the radio server"}
+      [] -> {:error, "There is no valid track in this request to the radio server."}
       _ -> {:ok, track_list}
     end
   end

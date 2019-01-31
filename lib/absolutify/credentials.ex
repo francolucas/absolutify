@@ -4,9 +4,12 @@ defmodule Absolutify.Credentials do
   defstruct [:access_token, :refresh_token, :valid_until]
 
   def new(%{"access_token" => access_token} = response, %Credentials{} = credentials) do
-    Map.put(credentials, :access_token, access_token)
-    |> refresh_token(response)
-    |> valid_until(response)
+    new_credentials =
+      %Credentials{credentials | access_token: access_token}
+      |> refresh_token(response)
+      |> valid_until(response)
+
+    {:ok, new_credentials}
   end
 
   def is_expired?(%Credentials{valid_until: nil}), do: true
@@ -16,18 +19,18 @@ defmodule Absolutify.Credentials do
     now > valid_until
   end
 
-  defp refresh_token(%Credentials{} = credentials, %{"refresh_token" => refresh_token}) do
-    Map.put(credentials, :refresh_token, refresh_token)
+  defp refresh_token(credentials, %{"refresh_token" => refresh_token}) do
+    %Credentials{credentials | refresh_token: refresh_token}
   end
 
   defp refresh_token(credentials, _response), do: credentials
 
-  defp valid_until(%Credentials{} = credentials, %{"expires_in" => expires_in}) do
+  defp valid_until(credentials, %{"expires_in" => expires_in}) do
     valid_until =
       (:os.system_time(:seconds) + expires_in - 60)
       |> DateTime.from_unix!(:second)
 
-    Map.put(credentials, :valid_until, valid_until)
+    %Credentials{credentials | valid_until: valid_until}
   end
 
   defp valid_until(credentials, _response), do: credentials

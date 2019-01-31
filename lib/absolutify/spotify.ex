@@ -3,7 +3,7 @@ defmodule Absolutify.Spotify do
 
   @url "https://api.spotify.com/v1"
 
-  def search_track(credentials, %Track{spotify_uri: nil} = track) do
+  def search_track(%Credentials{} = credentials, %Track{spotify_uri: nil} = track) do
     with {:ok, response} <- do_search_request(credentials, track),
          {:ok, result} <- handle_response(response),
          {:ok, spotify_track} <- first_result(result) do
@@ -13,7 +13,7 @@ defmodule Absolutify.Spotify do
     end
   end
 
-  def search_track(_credentials, track), do: {:ok, track}
+  def search_track(_credentials, %Track{} = track), do: {:ok, track}
 
   defp do_search_request(credentials, %Track{artist: artist, title: title})
        when not is_nil(artist) and not is_nil(title) do
@@ -42,11 +42,11 @@ defmodule Absolutify.Spotify do
   end
 
   defp handle_response(%HTTPoison.Response{status_code: status_code}) when status_code >= 400 do
-    {:error, "It was not possible to connect to Spotify API. Authentication problem maybe?"}
+    {:error, "It was not possible to connect to the Spotify API. Authentication problem maybe?"}
   end
 
   defp first_result(%{"tracks" => %{"items" => [spotify_track | _tail]}}),
     do: {:ok, spotify_track}
 
-  defp first_result(_result), do: {:error, "Track not found"}
+  defp first_result(_result), do: {:error, "Spotify could not find the track."}
 end

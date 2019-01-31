@@ -9,10 +9,10 @@ defmodule Absolutify.Track do
   end
 
   def new(%DateTime{} = played_at, artist, title) do
-    %Track{artist: artist, title: title, played_at: played_at}
+    %Track{artist: String.trim(artist), title: String.trim(title), played_at: played_at}
   end
 
   def add_spotify_uri(%Track{} = track, spotify_uri) do
-    Map.put(track, :spotify_uri, spotify_uri)
+    %Track{track | spotify_uri: spotify_uri}
   end
 end
