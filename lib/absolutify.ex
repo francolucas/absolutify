@@ -7,12 +7,14 @@ defmodule Absolutify do
   @job_interval 60_000
 
   def start_link(_state) do
-    state = %State{credentials: %Credentials{}}
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def init(state) do
-    {:ok, do_job(state)}
+  def init(_state) do
+    case Authentication.auth(%Credentials{}) do
+      {:ok, credentials} -> {:ok, do_job(%State{credentials: credentials})}
+      {_error, message} -> {:stop, message}
+    end
   end
 
   def handle_info(:job, state) do
@@ -29,8 +31,9 @@ defmodule Absolutify do
       with {:ok, credentials} <- Authentication.auth(state.credentials),
            {:ok, track} <- Radio.last_track(),
            {:ok, track} <- new_track?(state, track),
-           {:ok, track} <- Spotify.search_track(credentials, track) do
-        Logger.info("Track: #{inspect(track)}")
+           {:ok, track} <- Spotify.search_track(credentials, track),
+           {:ok, track} <- Spotify.add_track_to_playlist(credentials, track) do
+        Logger.info("Track inserted in the playlist: #{inspect(track)}")
         %State{credentials: credentials, last_track_played_at: track.played_at}
       else
         error ->
@@ -53,7 +56,6 @@ defmodule Absolutify do
   end
 
   defp handle_error({:error, :tracked}), do: nil
-  defp handle_error({:auth_error, message}), do: send(self(), {:stop, message})
   defp handle_error(error), do: Logger.error("Error: #{inspect(error)}")
 
   defp schedule_next_job(), do: Process.send_after(self(), :job, @job_interval)
