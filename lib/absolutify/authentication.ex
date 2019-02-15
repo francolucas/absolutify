@@ -1,9 +1,7 @@
 defmodule Absolutify.Authentication do
-  alias Absolutify.Credentials
+  alias Absolutify.{AuthenticationRequest, Credentials}
 
-  @url "https://accounts.spotify.com/api/token"
-
-  def auth(%Credentials{} = credentials) do
+  def auth(%Credentials{} = credentials \\ %Credentials{}) do
     case Credentials.is_expired?(credentials) do
       true -> re_auth(credentials)
       false -> {:ok, credentials}
@@ -11,7 +9,7 @@ defmodule Absolutify.Authentication do
   end
 
   defp re_auth(%Credentials{} = credentials) do
-    HTTPoison.post(@url, body(credentials), headers())
+    AuthenticationRequest.post(body(credentials))
     |> handle_response(credentials)
   end
 
@@ -26,20 +24,6 @@ defmodule Absolutify.Authentication do
     "grant_type=refresh_token&refresh_token=#{token}"
   end
 
-  defp headers() do
-    [
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: "Basic #{auth_token()}"
-    ]
-  end
-
-  defp auth_token() do
-    client_id = Application.get_env(:absolutify, :client_id)
-    secret_key = Application.get_env(:absolutify, :secret_key)
-
-    :base64.encode("#{client_id}:#{secret_key}")
-  end
-
   defp handle_response({:ok, %HTTPoison.Response{body: response, status_code: 200}}, credentials) do
     response
     |> Poison.decode!()
@@ -52,11 +36,11 @@ defmodule Absolutify.Authentication do
        )
        when status_code >= 400 do
     response
-    |> Poison.decode!()
+    |> Poison.decode()
     |> auth_error()
   end
 
-  defp auth_error(%{"error_description" => error_description}),
+  defp auth_error({:ok, %{"error_description" => error_description}}),
     do: {:auth_error, error_description}
 
   defp auth_error(_error), do: {:auth_error, "Could not authenticate"}
