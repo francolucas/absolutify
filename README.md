@@ -50,6 +50,7 @@ Each minute, Absolutify will do the following commands:
 
 ## Next steps
 
+- Write tests.
 - Start a web server to be the `redirect_uri` and receive the `code`.
 - Since Absolute Radio returns a list of the latest played songs, parse the songs and connect to the Radio less often.
 - Check if the song already exists in the playlist to avoid repeated songs.
@@ -57,6 +58,5 @@ Each minute, Absolutify will do the following commands:
 - Better error handling.
 - Better logs.
 - Deploy in a cloud server.
-- Write tests.
 - Configure a cloud CI.
 - Make it public.
