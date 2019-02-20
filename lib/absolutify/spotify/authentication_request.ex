@@ -1,4 +1,4 @@
-defmodule Absolutify.AuthenticationRequest do
+defmodule Absolutify.Spotify.AuthenticationRequest do
   @url "https://accounts.spotify.com/api/token"
 
   def post(body) when is_binary(body) do

@@ -1,0 +1,34 @@
+defmodule Absolutify.Spotify.Search do
+  alias Absolutify.Track
+  alias Absolutify.Spotify.{ApiRequest, Credentials}
+
+  def track(%Credentials{} = credentials, %Track{spotify_uri: nil} = track) do
+    with {:ok, response} <- do_request(credentials, track),
+         {:ok, spotify_track} <- first_result(response) do
+      {:ok, Track.add_spotify_uri(track, spotify_track["uri"])}
+    else
+      error -> error
+    end
+  end
+
+  def track(_credentials, %Track{} = track), do: {:ok, track}
+
+  defp do_request(credentials, %Track{artist: artist, title: title})
+       when not is_nil(artist) and not is_nil(title) do
+    %{
+      q: "#{artist} #{title}",
+      type: "track"
+    }
+    |> url()
+    |> ApiRequest.get(credentials)
+  end
+
+  defp url(params) do
+    "/search?" <> URI.encode_query(params)
+  end
+
+  defp first_result(%{"tracks" => %{"items" => [spotify_track | _tail]}}),
+    do: {:ok, spotify_track}
+
+  defp first_result(_result), do: {:error, "Spotify could not find the track."}
+end

@@ -1,5 +1,5 @@
-defmodule Absolutify.Authentication do
-  alias Absolutify.{AuthenticationRequest, Credentials}
+defmodule Absolutify.Spotify.Authentication do
+  alias Absolutify.Spotify.{AuthenticationRequest, Credentials}
 
   def auth(%Credentials{} = credentials \\ %Credentials{}) do
     case Credentials.is_expired?(credentials) do
@@ -41,7 +41,7 @@ defmodule Absolutify.Authentication do
   end
 
   defp auth_error({:ok, %{"error_description" => error_description}}),
-    do: {:auth_error, error_description}
+    do: {:error, error_description}
 
-  defp auth_error(_error), do: {:auth_error, "Could not authenticate"}
+  defp auth_error(_error), do: {:error, "Could not authenticate"}
 end

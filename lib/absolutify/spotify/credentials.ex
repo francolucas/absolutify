@@ -1,5 +1,5 @@
-defmodule Absolutify.Credentials do
-  alias Absolutify.Credentials
+defmodule Absolutify.Spotify.Credentials do
+  alias Absolutify.Spotify.Credentials
 
   defstruct [:access_token, :refresh_token, :valid_until]
 
