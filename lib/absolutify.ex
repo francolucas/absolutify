@@ -1,8 +1,11 @@
 defmodule Absolutify do
   use GenServer
-  require Logger
 
-  alias Absolutify.{Authentication, Credentials, Radio, Spotify, State, Track}
+  alias Absolutify.{State, Track}
+  alias Absolutify.Spotify.{Authentication, Credentials, Playlist, Search}
+  alias Absolutify.Radio.AbsoluteRadio
+
+  require Logger
 
   @job_interval 60_000
 
@@ -29,10 +32,10 @@ defmodule Absolutify do
   defp do_job(state) do
     new_state =
       with {:ok, credentials} <- Authentication.auth(state.credentials),
-           {:ok, track} <- Radio.last_track(),
+           {:ok, track} <- AbsoluteRadio.last_track(),
            {:ok, track} <- new_track?(state, track),
-           {:ok, track} <- Spotify.search_track(credentials, track),
-           {:ok, track} <- Spotify.add_track_to_playlist(credentials, track) do
+           {:ok, track} <- Search.track(credentials, track),
+           {:ok, track} <- Playlist.add_track(credentials, track) do
         Logger.info("Track inserted in the playlist: #{inspect(track)}")
         %State{credentials: credentials, last_track_played_at: track.played_at}
       else

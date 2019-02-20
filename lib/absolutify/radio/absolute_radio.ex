@@ -1,4 +1,4 @@
-defmodule Absolutify.Radio do
+defmodule Absolutify.Radio.AbsoluteRadio do
   alias Absolutify.Track
 
   @url "https://absoluteradio.co.uk/_ajax/recently-played.php"

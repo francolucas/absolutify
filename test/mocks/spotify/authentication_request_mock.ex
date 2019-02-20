@@ -2,7 +2,7 @@ defmodule HTTPoison.Response do
   defstruct body: nil, headers: nil, status_code: nil
 end
 
-defmodule Absolutify.AuthenticationRequestMock do
+defmodule Absolutify.Spotify.AuthenticationRequestMock do
   def post(:spotify_error_response) do
     {:ok, failed_response()}
   end
