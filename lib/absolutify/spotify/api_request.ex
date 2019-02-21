@@ -20,13 +20,13 @@ defmodule Absolutify.Spotify.ApiRequest do
     ]
   end
 
-  defp handle_response(%HTTPoison.Response{body: response, status_code: code})
+  defp handle_response({:ok, %HTTPoison.Response{body: response, status_code: code}})
        when code in 200..201 do
     response
     |> Poison.decode()
   end
 
-  defp handle_response(%HTTPoison.Response{status_code: code}) when code >= 400 do
+  defp handle_response({:ok, %HTTPoison.Response{status_code: code}}) when code >= 400 do
     {:error, "It was not possible to connect to the Spotify API. Authentication problem maybe?"}
   end
 end
