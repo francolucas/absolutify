@@ -1,8 +1,6 @@
 defmodule Absolutify.Radio.AbsoluteRadio do
+  alias Absolutify.Radio.Request
   alias Absolutify.Track
-
-  @url "https://absoluteradio.co.uk/_ajax/recently-played.php"
-  @headers ["Content-Type": "application/x-www-form-urlencoded"]
 
   def last_track() do
     case latest_tracks() do
@@ -12,17 +10,13 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   end
 
   def latest_tracks() do
-    with {:ok, response} <- HTTPoison.post(@url, body(), @headers),
+    with {:ok, response} <- Request.post(),
          {:ok, result} <- handle_response(response),
          {:ok, tracks} <- build_tracks(result) do
       {:ok, tracks}
     else
       error -> error
     end
-  end
-
-  defp body() do
-    "lastTime=#{:os.system_time(:second)}&serviceID=1&mode=more&searchTerm="
   end
 
   defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do

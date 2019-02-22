@@ -1,5 +1,5 @@
 defmodule Absolutify.Spotify.Authentication do
-  alias Absolutify.Spotify.{AuthenticationRequest, Credentials}
+  alias Absolutify.Spotify.{AuthenticationRequest, Credentials, Responder}
 
   def auth(%Credentials{} = credentials \\ %Credentials{}) do
     case Credentials.is_expired?(credentials) do
@@ -9,8 +9,12 @@ defmodule Absolutify.Spotify.Authentication do
   end
 
   defp re_auth(%Credentials{} = credentials) do
-    AuthenticationRequest.post(body(credentials))
-    |> handle_response(credentials)
+    with {:ok, response} <- AuthenticationRequest.post(body(credentials)),
+         {:ok, body} <- Responder.handle_response(response) do
+      Credentials.new(body, credentials)
+    else
+      error -> error
+    end
   end
 
   defp body(%Credentials{refresh_token: nil}) do
@@ -23,25 +27,4 @@ defmodule Absolutify.Spotify.Authentication do
   defp body(%Credentials{refresh_token: token}) do
     "grant_type=refresh_token&refresh_token=#{token}"
   end
-
-  defp handle_response({:ok, %HTTPoison.Response{body: response, status_code: 200}}, credentials) do
-    response
-    |> Poison.decode!()
-    |> Credentials.new(credentials)
-  end
-
-  defp handle_response(
-         {:ok, %HTTPoison.Response{body: response, status_code: status_code}},
-         _credentials
-       )
-       when status_code >= 400 do
-    response
-    |> Poison.decode()
-    |> auth_error()
-  end
-
-  defp auth_error({:ok, %{"error_description" => error_description}}),
-    do: {:error, error_description}
-
-  defp auth_error(_error), do: {:error, "Could not authenticate"}
 end

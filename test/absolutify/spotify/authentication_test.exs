@@ -3,10 +3,11 @@ defmodule Absolutify.Spotify.AuthenticationTest do
 
   import Mock
 
+  alias Absolutify.RequestMock
+
   alias Absolutify.Spotify.{
     Authentication,
     AuthenticationRequest,
-    AuthenticationRequestMock,
     Credentials
   }
 
@@ -20,7 +21,7 @@ defmodule Absolutify.Spotify.AuthenticationTest do
   describe "authentication" do
     test "authenticate using code" do
       with_mock AuthenticationRequest,
-        post: fn params -> AuthenticationRequestMock.post(params) end do
+        post: fn _params -> RequestMock.post(:auth_success) end do
         assert {:ok, %Credentials{}} = Authentication.auth()
       end
     end
@@ -39,15 +40,15 @@ defmodule Absolutify.Spotify.AuthenticationTest do
 
     test "authenticate with invalid code" do
       with_mock AuthenticationRequest,
-        post: fn _params -> AuthenticationRequestMock.post(:spotify_error_response) end do
+        post: fn _params -> RequestMock.post(:auth_invalid_code) end do
         assert {:error, "Invalid authorization code"} = Authentication.auth()
       end
     end
 
     test "unexpected error request" do
       with_mock AuthenticationRequest,
-        post: fn _params -> AuthenticationRequestMock.post(:unexpected_error) end do
-        assert {:error, "Could not authenticate"} = Authentication.auth()
+        post: fn _params -> RequestMock.post(:unexpected_error) end do
+        assert {:error, "It was not possible to connect to Spotify"} = Authentication.auth()
       end
     end
   end
