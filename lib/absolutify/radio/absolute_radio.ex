@@ -11,12 +11,20 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   def latest_tracks() do
     with {:ok, response} <- Request.post(),
-         {:ok, tracks} <- build_tracks(response) do
+         {:ok, result} <- handle_response(response),
+         {:ok, tracks} <- build_tracks(result) do
       {:ok, tracks}
     else
       error -> error
     end
   end
+
+  defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do
+    response
+    |> Poison.decode()
+  end
+
+  defp handle_response(_response), do: {:error, "Could not connect to the radio server."}
 
   defp build_tracks(%{"events" => track_list}) when is_list(track_list) do
     track_list
@@ -24,7 +32,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
     |> validate_track_list
   end
 
-  defp build_tracks(_response), do: {:error, "Not expected result format from the radio server."}
+  defp build_tracks(_result), do: {:error, "Not expected result format from the radio server."}
 
   defp build_track(%{
          "ArtistName" => artist,

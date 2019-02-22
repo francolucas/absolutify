@@ -1,10 +1,11 @@
 defmodule Absolutify.Spotify.Search do
   alias Absolutify.Track
-  alias Absolutify.Spotify.{ApiRequest, Credentials}
+  alias Absolutify.Spotify.{ApiRequest, Credentials, Responder}
 
   def track(%Credentials{} = credentials, %Track{spotify_uri: nil} = track) do
     with {:ok, response} <- do_request(credentials, track),
-         {:ok, spotify_track} <- first_result(response) do
+         {:ok, body} <- Responder.handle_response(response),
+         {:ok, spotify_track} <- first_result(body) do
       {:ok, Track.add_spotify_uri(track, spotify_track["uri"])}
     else
       error -> error
