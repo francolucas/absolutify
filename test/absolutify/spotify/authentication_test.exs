@@ -18,15 +18,27 @@ defmodule Absolutify.Spotify.AuthenticationTest do
     Application.put_env(:absolutify, :secret_key, "ebBMOu14UwTpElLdxZ7f")
   end
 
-  describe "authentication" do
-    test "authenticate using code" do
+  describe "Authentication.auth/0" do
+    test "authenticates using a valid code" do
       with_mock AuthenticationRequest,
         post: fn _params -> RequestMock.post(:auth_success) end do
-        assert {:ok, %Credentials{}} = Authentication.auth()
+        {:ok, %Credentials{} = credentials} = Authentication.auth()
+
+        assert !is_nil(credentials.access_token) and !is_nil(credentials.refresh_token) and
+                 !is_nil(credentials.valid_until)
       end
     end
 
-    test "user already authenticated" do
+    test "returns an expected error when it tries to authenticate with an invalid code" do
+      with_mock AuthenticationRequest,
+        post: fn _params -> RequestMock.post(:auth_invalid_code) end do
+        assert {:error, "Invalid authorization code"} = Authentication.auth()
+      end
+    end
+  end
+
+  describe "Authentication.auth/1" do
+    test "does not change the current credentials if its a valid one" do
       expires_at = (:os.system_time(:seconds) + 3600) |> DateTime.from_unix!(:second)
 
       credentials = %Credentials{
@@ -38,17 +50,21 @@ defmodule Absolutify.Spotify.AuthenticationTest do
       assert {:ok, ^credentials} = Authentication.auth(credentials)
     end
 
-    test "authenticate with invalid code" do
-      with_mock AuthenticationRequest,
-        post: fn _params -> RequestMock.post(:auth_invalid_code) end do
-        assert {:error, "Invalid authorization code"} = Authentication.auth()
-      end
-    end
+    test "returns new credentials if the current one is expired" do
+      expires_at = (:os.system_time(:seconds) - 10) |> DateTime.from_unix!(:second)
 
-    test "unexpected error request" do
+      expired_credentials = %Credentials{
+        access_token: "a_valid_access_token",
+        refresh_token: "a_valid_refresh_token",
+        valid_until: expires_at
+      }
+
       with_mock AuthenticationRequest,
-        post: fn _params -> RequestMock.post(:unexpected_error) end do
-        assert {:error, "It was not possible to connect to Spotify"} = Authentication.auth()
+        post: fn _params -> RequestMock.post(:auth_success) end do
+        {:ok, %Credentials{} = new_credentials} = Authentication.auth(expired_credentials)
+
+        refute expired_credentials == new_credentials
+        assert new_credentials.valid_until > expired_credentials.valid_until
       end
     end
   end
