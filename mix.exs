@@ -28,7 +28,8 @@ defmodule Absolutify.MixProject do
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
       {:mock, "~> 0.3.0", only: :test},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 
