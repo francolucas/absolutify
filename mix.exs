@@ -24,7 +24,7 @@ defmodule Absolutify.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.4"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:mock, "~> 0.3.0", only: :test}
     ]
   end
