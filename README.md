@@ -1,5 +1,8 @@
 # Absolutify
 
+[![CircleCI](https://circleci.com/gh/francolucas/absolutify.svg?style=svg)](https://circleci.com/gh/francolucas/absolutify)
+[![Coverage Status](https://coveralls.io/repos/github/francolucas/absolutify/badge.svg?branch=master)](https://coveralls.io/github/francolucas/absolutify?branch=master)
+
 An Elixir app created for studies purpose that checks "real-time" the songs played in [Absolute Radio](https://absoluteradio.co.uk/absolute-radio/) and inserts into a specific Spotify playlist.
 
 ## Requirements
@@ -50,7 +53,7 @@ Each minute, Absolutify will do the following commands:
 
 ## Next steps
 
-- Write tests.
+- Write more tests.
 - Start a web server to be the `redirect_uri` and receive the `code`.
 - Since Absolute Radio returns a list of the latest played songs, parse the songs and connect to the Radio less often.
 - Check if the song already exists in the playlist to avoid repeated songs.
@@ -58,5 +61,4 @@ Each minute, Absolutify will do the following commands:
 - Better error handling.
 - Better logs.
 - Deploy in a cloud server.
-- Configure a cloud CI.
 - Make it public.
