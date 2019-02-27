@@ -11,8 +11,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   def latest_tracks() do
     with {:ok, response} <- Request.post(),
-         {:ok, result} <- handle_response(response),
-         {:ok, tracks} <- build_tracks(result) do
+         {:ok, tracks} <- handle_response(response) do
       {:ok, tracks}
     else
       error -> error
@@ -22,11 +21,12 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do
     response
     |> Poison.decode()
+    |> build_tracks()
   end
 
   defp handle_response(_response), do: {:error, "Could not connect to the radio server."}
 
-  defp build_tracks(%{"events" => track_list}) when is_list(track_list) do
+  defp build_tracks({:ok, %{"events" => track_list}}) when is_list(track_list) do
     track_list
     |> Enum.map(&build_track/1)
     |> validate_track_list
