@@ -39,7 +39,11 @@ defmodule Absolutify.Spotify.AuthenticationTest do
 
   describe "Authentication.auth/1" do
     test "does not change the current credentials if its a valid one" do
-      expires_at = (:os.system_time(:seconds) + 3600) |> DateTime.from_unix!(:second)
+      expires_at =
+        :seconds
+        |> :os.system_time()
+        |> Kernel.+(3600)
+        |> DateTime.from_unix!(:second)
 
       credentials = %Credentials{
         access_token: "a_valid_access_token",

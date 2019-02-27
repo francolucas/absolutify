@@ -1,9 +1,9 @@
 defmodule Absolutify do
   use GenServer
 
-  alias Absolutify.{State, Track}
-  alias Absolutify.Spotify.{Authentication, Credentials, Playlist, Search}
   alias Absolutify.Radio.AbsoluteRadio
+  alias Absolutify.Spotify.{Authentication, Credentials, Playlist, Search}
+  alias Absolutify.{State, Track}
 
   require Logger
 
@@ -61,5 +61,5 @@ defmodule Absolutify do
   defp handle_error({:error, :tracked}), do: nil
   defp handle_error(error), do: Logger.error("Error: #{inspect(error)}")
 
-  defp schedule_next_job(), do: Process.send_after(self(), :job, @job_interval)
+  defp schedule_next_job, do: Process.send_after(self(), :job, @job_interval)
 end

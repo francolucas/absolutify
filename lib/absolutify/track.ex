@@ -4,7 +4,8 @@ defmodule Absolutify.Track do
   defstruct [:artist, :title, :played_at, :spotify_uri]
 
   def new(played_at, artist, title) when is_integer(played_at) do
-    DateTime.from_unix!(played_at, :second)
+    played_at
+    |> DateTime.from_unix!(:second)
     |> new(artist, title)
   end
 
