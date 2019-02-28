@@ -12,6 +12,10 @@ defmodule Absolutify.RequestMock do
     {:ok, auth_success_response()}
   end
 
+  def post(:refresh_token_success) do
+    {:ok, refresh_token_success_response()}
+  end
+
   def post(:latest_tracks_success) do
     {:ok, latest_tracks_response()}
   end
@@ -33,15 +37,20 @@ defmodule Absolutify.RequestMock do
     {:ok, failed_response_without_description()}
   end
 
-  # exception response
-  def request(:exception) do
-    {:error, exception_response()}
-  end
-
   defp auth_success_response do
     %HTTPoison.Response{
       body: "{\"access_token\":\"a_valid_access_token\",\"token_type\":\"Bearer\",
         \"expires_in\":3600,\"refresh_token\":\"a_valid_refresh_token\",
+        \"scope\":\"playlist-read-private playlist-modify-private playlist-modify-public\"}",
+      headers: [],
+      status_code: 200
+    }
+  end
+
+  defp refresh_token_success_response do
+    %HTTPoison.Response{
+      body: "{\"access_token\":\"a_valid_access_token\",\"token_type\":\"Bearer\",
+        \"expires_in\":3600,
         \"scope\":\"playlist-read-private playlist-modify-private playlist-modify-public\"}",
       headers: [],
       status_code: 200
@@ -90,9 +99,5 @@ defmodule Absolutify.RequestMock do
       headers: [],
       status_code: 403
     }
-  end
-
-  defp exception_response do
-    %HTTPoison.Error{id: nil, reason: :closed}
   end
 end
