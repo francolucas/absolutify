@@ -4,7 +4,7 @@ defmodule Absolutify.MixProject do
   def project do
     [
       app: :absolutify,
-      version: "0.1.0",
+      version: "0.1.2",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -28,7 +28,8 @@ defmodule Absolutify.MixProject do
       {:httpoison, "~> 1.4"},
       {:poison, "~> 4.0"},
       {:mock, "~> 0.3.0", only: :test},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 

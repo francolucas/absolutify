@@ -2,14 +2,14 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   alias Absolutify.Radio.Request
   alias Absolutify.Track
 
-  def last_track() do
+  def last_track do
     case latest_tracks() do
       {:ok, [track | _tracks]} -> {:ok, track}
       error -> error
     end
   end
 
-  def latest_tracks() do
+  def latest_tracks do
     with {:ok, response} <- Request.post(),
          {:ok, tracks} <- handle_response(response) do
       {:ok, tracks}
