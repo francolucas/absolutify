@@ -64,7 +64,7 @@ defmodule Absolutify.Spotify.AuthenticationTest do
       }
 
       with_mock AuthenticationRequest,
-        post: fn _params -> RequestMock.post(:auth_success) end do
+        post: fn _params -> RequestMock.post(:refresh_token_success) end do
         {:ok, %Credentials{} = new_credentials} = Authentication.auth(expired_credentials)
 
         refute expired_credentials == new_credentials

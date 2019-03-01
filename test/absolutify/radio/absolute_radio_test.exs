@@ -48,5 +48,12 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
         assert {:ok, ^expected_track} = AbsoluteRadio.last_track()
       end
     end
+
+    test "returns an expected error when it can not connect to the radio server" do
+      with_mock Request,
+        post: fn -> RequestMock.post(:unexpected_error) end do
+        assert {:error, "Could not connect to the radio server."} = AbsoluteRadio.last_track()
+      end
+    end
   end
 end

@@ -32,6 +32,4 @@ defmodule Absolutify.Spotify.Credentials do
 
     %Credentials{credentials | valid_until: valid_until}
   end
-
-  defp valid_until(credentials, _response), do: credentials
 end
