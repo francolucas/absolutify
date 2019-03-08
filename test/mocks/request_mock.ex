@@ -8,6 +8,10 @@ end
 
 defmodule Absolutify.RequestMock do
   # 20X responses
+  def get(:search_track_success) do
+    {:ok, search_track_success_response()}
+  end
+
   def post(:auth_success) do
     {:ok, auth_success_response()}
   end
@@ -35,6 +39,35 @@ defmodule Absolutify.RequestMock do
 
   def post(:unexpected_error) do
     {:ok, failed_response_without_description()}
+  end
+
+  defp search_track_success_response do
+    %HTTPoison.Response{
+      body: "{\"tracks\":{\"href\":\"https://api.spotify.com/v1/search?query=Query&type=track\",
+        \"items\":[{\"album\":{},\"artists\":[],\"available_markets\":[],\"disc_number\":1,
+        \"duration_ms\":235546,\"explicit\":false,\"external_ids\":{\"isrc\":\"USRC11100031\"},
+        \"external_urls\":{\"spotify\":\"https://open.spotify.com/track/6u0x5ad9ewHvs3z6u9Oe3c\"},
+        \"href\":\"https://api.spotify.com/v1/tracks/6u0x5ad9ewHvs3z6u9Oe3c\",
+        \"id\":\"6u0x5ad9ewHvs3z6u9Oe3c\",\"is_local\":false,\"name\":\"Under Cover of Darkness\",
+        \"popularity\":68,\"preview_url\":\"\",\"track_number\":2,\"type\":\"track\",
+        \"uri\":\"spotify:track:6u0x5ad9ewHvs3z6u9Oe3c\"},{\"album\":{},\"artists\":[],
+        \"available_markets\":[],\"disc_number\":1,\"duration_ms\":235171,\"explicit\":false,
+        \"external_ids\":{\"isrc\":\"USRC11100031\"},\"external_urls\":{
+        \"spotify\":\"https://open.spotify.com/track/3sqW6O1PtfBnmJpHRitB5N\"},
+        \"href\":\"https://api.spotify.com/v1/tracks/3sqW6O1PtfBnmJpHRitB5N\",\"id\":\"3sqW6O1PtfBnmJpHRitB5N\",
+        \"is_local\":false,\"name\":\"Under Cover of Darkness\",\"popularity\":38,\"preview_url\":\"\",
+        \"track_number\":1,\"type\":\"track\",\"uri\":\"spotify:track:3sqW6O1PtfBnmJpHRitB5N\"},{
+        \"album\":{},\"artists\":[],\"available_markets\":[],\"disc_number\":4,\"duration_ms\":235546,
+        \"explicit\":false,\"external_ids\":{\"isrc\":\"USRC11100031\"},\"external_urls\":{
+        \"spotify\":\"https://open.spotify.com/track/5zwf83kXfabDCOLVC2qHaM\"},
+        \"href\":\"https://api.spotify.com/v1/tracks/5zwf83kXfabDCOLVC2qHaM\",\"id\":\"5zwf83kXfabDCOLVC2qHaM\",
+        \"is_local\":false,\"name\":\"Under Cover of Darkness\",\"popularity\":28,\"preview_url\":\"\",
+        \"track_number\":2,\"type\":\"track\",\"uri\":\"spotify:track:5zwf83kXfabDCOLVC2qHaM\"}],\"limit\":3,
+        \"next\":\"https://api.spotify.com/v1/search?query=Query&type=track&market=BR&offset=3\",
+        \"offset\":0,\"previous\":null,\"total\":34}  }",
+      headers: [],
+      status_code: 200
+    }
   end
 
   defp auth_success_response do
