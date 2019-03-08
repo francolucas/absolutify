@@ -33,7 +33,8 @@ defmodule Absolutify.Spotify.SearchTest do
     test "returns an expected error when Spotify can not find the track", context do
       with_mock ApiRequest,
         get: fn _url, _credentials -> RequestMock.get(:track_not_found) end do
-        assert {:error, "Spotify could not find the track."} == Search.track(context.credentials, context.track)
+        assert {:error, "Spotify could not find the track."} ==
+                 Search.track(context.credentials, context.track)
       end
     end
   end
