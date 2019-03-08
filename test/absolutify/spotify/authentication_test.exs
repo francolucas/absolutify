@@ -11,7 +11,7 @@ defmodule Absolutify.Spotify.AuthenticationTest do
     Credentials
   }
 
-  setup do
+  setup_all do
     Application.put_env(:absolutify, :code, "dR7gOOlpu8kku7MLdbEoGoU9eoEhedgaIxuCe6WT")
     Application.put_env(:absolutify, :callback_url, "http://localhost")
     Application.put_env(:absolutify, :client_id, "ni9DdjJvLrBk79GtOTUD")
