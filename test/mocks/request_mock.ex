@@ -12,6 +12,10 @@ defmodule Absolutify.RequestMock do
     {:ok, search_track_success_response()}
   end
 
+  def get(:track_not_found) do
+    {:ok, track_not_found_response()}
+  end
+
   def post(:auth_success) do
     {:ok, auth_success_response()}
   end
@@ -63,8 +67,18 @@ defmodule Absolutify.RequestMock do
         \"href\":\"https://api.spotify.com/v1/tracks/5zwf83kXfabDCOLVC2qHaM\",\"id\":\"5zwf83kXfabDCOLVC2qHaM\",
         \"is_local\":false,\"name\":\"Under Cover of Darkness\",\"popularity\":28,\"preview_url\":\"\",
         \"track_number\":2,\"type\":\"track\",\"uri\":\"spotify:track:5zwf83kXfabDCOLVC2qHaM\"}],\"limit\":3,
-        \"next\":\"https://api.spotify.com/v1/search?query=Query&type=track&market=BR&offset=3\",
+        \"next\":\"https://api.spotify.com/v1/search?query=Query&type=track&offset=3\",
         \"offset\":0,\"previous\":null,\"total\":34}  }",
+      headers: [],
+      status_code: 200
+    }
+  end
+
+  defp track_not_found_response do
+    %HTTPoison.Response{
+      body: "{\"tracks\":{
+        \"href\":\"https://api.spotify.com/v1/search?query=Query&type=track&offset=0&limit=20\",
+        \"items\":[],\"limit\":20,\"next\":null,\"offset\":0,\"previous\":null,\"total\":0}}",
       headers: [],
       status_code: 200
     }
