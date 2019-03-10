@@ -25,7 +25,7 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
 
     test "returns an expected error when the radio server response is invalid" do
       with_mock Request,
-        post: fn -> RequestMock.post(:empty_response_ok) end do
+        post: fn -> RequestMock.post(:empty_response_success) end do
         assert {:error, "Not expected result format from the radio server."} =
                  AbsoluteRadio.latest_tracks()
       end
