@@ -25,5 +25,13 @@ defmodule Absolutify.Spotify.PlaylistTest do
       assert {:error, "The track has no :spotify_uri"} =
                Playlist.add_track(Data.credentials(), Data.track())
     end
+
+    test "returns an error when it can not connect to the Spotify server" do
+      with_mock ApiRequest,
+        post: fn _url, _credentials -> RequestMock.post(:unexpected_error) end do
+        track = Data.track() |> Track.add_spotify_uri("spotify:track:6u0x5ad9ewHvs3z6u9Oe3c")
+        assert {:error, _error} = Playlist.add_track(Data.credentials(), track)
+      end
+    end
   end
 end
