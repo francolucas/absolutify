@@ -32,8 +32,12 @@ defmodule Absolutify.RequestMock do
     {:ok, latest_tracks_invalid_list_response()}
   end
 
-  def post(:empty_response_ok) do
-    {:ok, empty_response(:ok)}
+  def post(:empty_response_success) do
+    {:ok, empty_response()}
+  end
+
+  def post(:added_to_playlist_success) do
+    {:ok, added_to_playlist_response()}
   end
 
   # 4XX responses
@@ -185,13 +189,19 @@ defmodule Absolutify.RequestMock do
     }
   end
 
-  defp empty_response(code) when code in [:ok, :created] do
-    status_code = if code == :ok, do: 200, else: 201
-
+  defp empty_response do
     %HTTPoison.Response{
       body: "",
       headers: [],
-      status_code: status_code
+      status_code: 200
+    }
+  end
+
+  defp added_to_playlist_response do
+    %HTTPoison.Response{
+      body: "{\"snapshot_id\":\"jDPaq5bidakN8ukz1hOd\"}",
+      headers: [],
+      status_code: 201
     }
   end
 
