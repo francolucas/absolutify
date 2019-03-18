@@ -3,7 +3,6 @@ defmodule Absolutify.Spotify.AuthenticationRequestTest do
 
   import Mock
 
-  alias Absolutify.RequestMock
   alias Absolutify.Spotify.AuthenticationRequest
 
   setup_all do
