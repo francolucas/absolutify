@@ -2,6 +2,7 @@ defmodule Absolutify.Spotify.Search do
   alias Absolutify.Track
   alias Absolutify.Spotify.{ApiRequest, Credentials, Responder}
 
+  @spec track(Credentials.t(), Track.t()) :: {:ok, Track.t()} | {:error, any}
   def track(%Credentials{} = credentials, %Track{spotify_uri: nil} = track) do
     with {:ok, response} <- do_request(credentials, track),
          {:ok, body} <- Responder.handle_response(response),

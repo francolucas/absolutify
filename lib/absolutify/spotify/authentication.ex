@@ -1,6 +1,7 @@
 defmodule Absolutify.Spotify.Authentication do
   alias Absolutify.Spotify.{AuthenticationRequest, Credentials, Responder}
 
+  @spec auth(Credentials.t()) :: {:ok, Credentials.t()} | {:error, any}
   def auth(%Credentials{} = credentials \\ %Credentials{}) do
     case Credentials.is_expired?(credentials) do
       true -> re_auth(credentials)
