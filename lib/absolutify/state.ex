@@ -1,3 +1,3 @@
 defmodule Absolutify.State do
-  defstruct [:credentials, :last_track_played_at]
+  defstruct [:credentials, :latest_track_played_at]
 end

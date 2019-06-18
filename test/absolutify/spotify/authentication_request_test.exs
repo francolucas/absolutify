@@ -23,7 +23,7 @@ defmodule Absolutify.Spotify.AuthenticationRequestTest do
           ]
         }
 
-        assert expected = AuthenticationRequest.post("body")
+        assert ^expected = AuthenticationRequest.post("body")
       end
     end
   end

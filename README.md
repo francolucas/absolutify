@@ -12,8 +12,6 @@ An Elixir app created for studies purpose that checks "real-time" the songs play
 
 **Note:** If you need a "Redirect URI' for your Spotify App you can use this one: [http://absolutify.lucasfranco.com.br](http://absolutify.lucasfranco.com.br). The only thing this endpoint does is printing the `code` returned by the Spotify when the user authorizes the app access. For further documentation, you can check the Spotify [Authorization Code Flow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow).
 
-*TODO: check the compatibility with different Elixir versions.*
-
 ## Usage
 
 First, the user needs to authorize the app accessing a URL with the following format:
@@ -54,11 +52,12 @@ Each minute, Absolutify will do the following commands:
 ## Next steps
 
 - Write more tests.
+- Typespecs.
+- Possibility to switch between other Absolute Radios (Classic Rock, 60s, etc).
 - Start a web server to be the `redirect_uri` and receive the `code`.
 - Since Absolute Radio returns a list of the latest played songs, parse the songs and connect to the Radio less often.
-- Check if the song already exists in the playlist to avoid repeated songs.
 - Separate the `GenServer` in two: one checking the played songs and another one to search and add the song in the Spotify playlist.
 - Better error handling.
 - Better logs.
 - Deploy in a cloud server.
-- Make it public.
+- Check if the song already exists in the playlist to avoid repeated songs.
