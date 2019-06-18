@@ -20,7 +20,7 @@ defmodule Absolutify.Spotify.ApiRequestTest do
           ]
         }
 
-        assert expected = ApiRequest.get("/get-url", credentials)
+        assert ^expected = ApiRequest.get("/get-url", credentials)
       end
     end
   end
@@ -40,7 +40,7 @@ defmodule Absolutify.Spotify.ApiRequestTest do
           ]
         }
 
-        assert expected = ApiRequest.post("/post-url", credentials)
+        assert ^expected = ApiRequest.post("/post-url", credentials)
       end
     end
   end

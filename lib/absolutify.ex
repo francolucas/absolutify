@@ -32,12 +32,12 @@ defmodule Absolutify do
   defp do_job(state) do
     new_state =
       with {:ok, credentials} <- Authentication.auth(state.credentials),
-           {:ok, track} <- AbsoluteRadio.last_track(),
+           {:ok, track} <- AbsoluteRadio.latest_track(),
            {:ok, track} <- new_track?(state, track),
            {:ok, track} <- Search.track(credentials, track),
            {:ok, track} <- Playlist.add_track(credentials, track) do
         Logger.info("Track inserted in the playlist: #{inspect(track)}")
-        %State{credentials: credentials, last_track_played_at: track.played_at}
+        %State{credentials: credentials, latest_track_played_at: track.played_at}
       else
         error ->
           handle_error(error)
@@ -49,10 +49,10 @@ defmodule Absolutify do
   end
 
   defp new_track?(
-         %State{last_track_played_at: last_track_played_at},
+         %State{latest_track_played_at: latest_track_played_at},
          %Track{played_at: played_at} = track
        ) do
-    case last_track_played_at != played_at do
+    case latest_track_played_at != played_at do
       true -> {:ok, track}
       false -> {:error, :tracked}
     end

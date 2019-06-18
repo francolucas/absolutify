@@ -15,7 +15,7 @@ defmodule Absolutify.Radio.RequestTest do
           headers: ["Content-Type": "application/x-www-form-urlencoded"]
         }
 
-        assert expected = Request.post()
+        assert ^expected = Request.post()
       end
     end
   end

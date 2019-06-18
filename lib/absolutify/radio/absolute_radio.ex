@@ -2,7 +2,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   alias Absolutify.Radio.Request
   alias Absolutify.Track
 
-  def last_track do
+  def latest_track do
     case latest_tracks() do
       {:ok, [track | _tracks]} -> {:ok, track}
       error -> error
@@ -29,7 +29,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   defp build_tracks({:ok, %{"events" => track_list}}) when is_list(track_list) do
     track_list
     |> Enum.map(&build_track/1)
-    |> validate_track_list
+    |> filter_track_list
   end
 
   defp build_tracks(_result), do: {:error, "Not expected result format from the radio server."}
@@ -44,7 +44,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   defp build_track(_event), do: nil
 
-  defp validate_track_list(tracks) do
+  defp filter_track_list(tracks) do
     track_list =
       tracks
       |> Enum.filter(&(!is_nil(&1)))

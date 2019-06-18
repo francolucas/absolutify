@@ -40,19 +40,19 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
     end
   end
 
-  describe "AbsoluteRadio.last_track/0" do
+  describe "AbsoluteRadio.latest_track/0" do
     test "returns the most recent track played on the radio" do
       with_mock Request,
         post: fn -> RequestMock.post(:latest_tracks_success) end do
         expected_track = Track.new(1_551_038_001, "Catfish And The Bottlemen", "Kathleen")
-        assert {:ok, ^expected_track} = AbsoluteRadio.last_track()
+        assert {:ok, ^expected_track} = AbsoluteRadio.latest_track()
       end
     end
 
     test "returns an expected error when it can not connect to the radio server" do
       with_mock Request,
         post: fn -> RequestMock.post(:unexpected_error) end do
-        assert {:error, "Could not connect to the radio server."} = AbsoluteRadio.last_track()
+        assert {:error, "Could not connect to the radio server."} = AbsoluteRadio.latest_track()
       end
     end
   end
