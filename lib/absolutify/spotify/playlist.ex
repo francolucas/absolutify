@@ -2,6 +2,7 @@ defmodule Absolutify.Spotify.Playlist do
   alias Absolutify.Track
   alias Absolutify.Spotify.{ApiRequest, Credentials, Responder}
 
+  @spec add_track(Credentials.t(), Track.t()) :: {:ok, Track.t()} | {:error, any}
   def add_track(_credentials, %Track{spotify_uri: nil}),
     do: {:error, "The track has no :spotify_uri"}
 

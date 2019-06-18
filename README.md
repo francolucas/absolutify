@@ -52,7 +52,6 @@ Each minute, Absolutify will do the following commands:
 ## Next steps
 
 - Write more tests.
-- Typespecs.
 - Possibility to switch between other Absolute Radios (Classic Rock, 60s, etc).
 - Start a web server to be the `redirect_uri` and receive the `code`.
 - Since Absolute Radio returns a list of the latest played songs, parse the songs and connect to the Radio less often.

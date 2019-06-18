@@ -2,6 +2,7 @@ defmodule Absolutify.Radio.Request do
   @url "https://absoluteradio.co.uk/_ajax/recently-played.php"
   @headers ["Content-Type": "application/x-www-form-urlencoded"]
 
+  @spec post() :: {:ok | :error, any}
   def post do
     HTTPoison.post(@url, body(), @headers)
   end

@@ -1,4 +1,5 @@
 defmodule Absolutify.Spotify.Responder do
+  @spec handle_response(HTTPoison.Response.t()) :: {:ok | :error, any}
   def handle_response(%HTTPoison.Response{body: response, status_code: code})
       when code in 200..201 do
     response

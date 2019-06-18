@@ -1,6 +1,7 @@
 defmodule Absolutify.Spotify.AuthenticationRequest do
   @url "https://accounts.spotify.com/api/token"
 
+  @spec post(String.t()) :: {:ok | :error, any}
   def post(body) when is_binary(body) do
     HTTPoison.post(@url, body, headers())
   end
