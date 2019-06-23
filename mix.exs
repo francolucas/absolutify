@@ -17,7 +17,7 @@ defmodule Absolutify.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :plug_cowboy],
       mod: {Absolutify.Application, []}
     ]
   end
@@ -29,7 +29,8 @@ defmodule Absolutify.MixProject do
       {:poison, "~> 4.0"},
       {:mock, "~> 0.3.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:plug_cowboy, "~> 2.0"}
     ]
   end
 

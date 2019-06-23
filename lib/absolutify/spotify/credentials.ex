@@ -1,15 +1,16 @@
 defmodule Absolutify.Spotify.Credentials do
   alias Absolutify.Spotify.Credentials
 
-  defstruct [:access_token, :refresh_token, :valid_until]
+  defstruct [:access_token, :code, :refresh_token, :valid_until]
 
   @type t :: %Credentials{
           access_token: String.t(),
+          code: String.t(),
           refresh_token: String.t(),
           valid_until: DateTime.t()
         }
 
-  @type token :: %{
+  @type response_token :: %{
           access_token: String.t(),
           token_type: String.t(),
           scope: String.t(),
@@ -17,7 +18,7 @@ defmodule Absolutify.Spotify.Credentials do
           refresh_token: String.t()
         }
 
-  @spec new(Credentials.token(), Credentials.t()) :: {:ok, Credentials.t()}
+  @spec new(Credentials.response_token(), Credentials.t()) :: {:ok, Credentials.t()}
   def new(%{"access_token" => access_token} = response, %Credentials{} = credentials) do
     new_credentials =
       %Credentials{credentials | access_token: access_token}

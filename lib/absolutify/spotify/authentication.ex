@@ -18,8 +18,8 @@ defmodule Absolutify.Spotify.Authentication do
     end
   end
 
-  defp body(%Credentials{refresh_token: nil}) do
-    code = Application.get_env(:absolutify, :code)
+  defp body(%Credentials{refresh_token: nil, code: code}) do
+    # code = Application.get_env(:absolutify, :code)
     callback_url = Application.get_env(:absolutify, :callback_url) |> URI.encode_www_form()
 
     "grant_type=authorization_code&code=#{code}&redirect_uri=#{callback_url}"
