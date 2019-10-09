@@ -8,8 +8,8 @@ defmodule Absolutify.Application do
       # {Absolutify, %State{}}
       Plug.Cowboy.child_spec(
         scheme: :http,
-        plug: Absolutify.Endpoint,
-        options: [port: 4001]
+        plug: Absolutify.WebServer.Router,
+        options: [port: Application.get_env(:absolutify, :port)]
       )
     ]
 

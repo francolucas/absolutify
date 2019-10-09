@@ -29,4 +29,8 @@ use Mix.Config
 #
 #     import_config "#{Mix.env()}.exs"
 
+config :absolutify,
+  url: "http://localhost",
+  port: 4002
+
 import_config "secret.exs"
