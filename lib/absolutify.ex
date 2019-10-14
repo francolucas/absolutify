@@ -9,19 +9,18 @@ defmodule Absolutify do
 
   @job_interval 60_000
 
-  def start_link(_state) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(credentials) do
+    GenServer.start_link(__MODULE__, credentials, name: __MODULE__)
   end
 
-  def init(_state) do
-    case Authentication.auth(%Credentials{}) do
-      {:ok, credentials} -> {:ok, do_job(%State{credentials: credentials})}
-      {_error, message} -> {:stop, message}
-    end
+  def init(%Credentials{} = credentials) do
+    state = do_job(%State{credentials: credentials})
+    {:ok, state}
   end
 
   def handle_info(:job, state) do
-    {:noreply, do_job(state)}
+    state = do_job(state)
+    {:noreply, state}
   end
 
   def handle_info({:stop, message}, state) do

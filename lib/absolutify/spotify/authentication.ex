@@ -20,7 +20,7 @@ defmodule Absolutify.Spotify.Authentication do
     end
   end
 
-  defp callback_url() do
+  defp callback_url do
     app_url = Application.get_env(:absolutify, :url)
     app_port = Application.get_env(:absolutify, :port)
 

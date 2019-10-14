@@ -17,7 +17,17 @@ defmodule Absolutify.WebServer.Controller do
   def render(:callback, conn) do
     with {:ok, code} <- extract_code(conn),
          {:ok, credentials} <- Authentication.auth(%Credentials{code: code}) do
-      send_resp(conn, 200, "I'm in!")
+      case Absolutify.Dynamic.start_crawler(credentials) do
+        {:ok, _pid} ->
+          send_resp(
+            conn,
+            200,
+            "The songs are being inserted into the playlsit, you can close this page"
+          )
+
+        _error ->
+          send_resp(conn, 500, "It was not possible to start the server")
+      end
     else
       {:error, message} -> send_resp(conn, 400, message)
     end
