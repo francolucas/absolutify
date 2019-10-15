@@ -4,16 +4,16 @@ defmodule Absolutify.Spotify.Credentials do
   defstruct [:access_token, :code, :refresh_token, :valid_until]
 
   @type t :: %Credentials{
-          access_token: String.t(),
-          code: String.t(),
-          refresh_token: String.t(),
-          valid_until: DateTime.t()
+          access_token: String.t() | nil,
+          code: String.t() | nil,
+          refresh_token: String.t() | nil,
+          valid_until: DateTime.t() | nil
         }
 
   @type response_token :: %{
           access_token: String.t(),
-          token_type: String.t(),
-          scope: String.t(),
+          token_type: String.t() | nil,
+          scope: String.t() | nil,
           expires_in: integer,
           refresh_token: String.t()
         }

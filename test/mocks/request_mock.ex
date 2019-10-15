@@ -8,6 +8,7 @@ end
 
 defmodule Absolutify.RequestMock do
   # 20X responses
+  @spec get(:search_track_success | :track_not_found) :: {:ok, HTTPoison.Response.t()}
   def get(:search_track_success) do
     {:ok, search_track_success_response()}
   end
@@ -16,6 +17,16 @@ defmodule Absolutify.RequestMock do
     {:ok, track_not_found_response()}
   end
 
+  @spec post(
+          :added_to_playlist_success
+          | :auth_invalid_code
+          | :auth_success
+          | :empty_response_success
+          | :latest_tracks_invalid_list
+          | :latest_tracks_success
+          | :refresh_token_success
+          | :unexpected_error
+        ) :: {:ok, HTTPoison.Response.t()}
   def post(:auth_success) do
     {:ok, auth_success_response()}
   end
@@ -215,7 +226,7 @@ defmodule Absolutify.RequestMock do
 
   defp failed_response_without_description do
     %HTTPoison.Response{
-      body: "An response with some error",
+      body: "A response with some error",
       headers: [],
       status_code: 403
     }

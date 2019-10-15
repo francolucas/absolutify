@@ -1,35 +1,32 @@
 defmodule Absolutify.WebServer.Controller do
   import Plug.Conn
+  alias Absolutify.Dynamic
   alias Absolutify.Spotify.{Authentication, Credentials}
   alias Plug.Conn.Query
 
-  @spec render(:callback | :connect | :home, Plug.Conn.t()) :: Plug.Conn.t()
-  def render(:home, conn) do
+  @spec action(:callback | :connect | :home, Plug.Conn.t()) :: Plug.Conn.t()
+  def action(:home, conn) do
     send_resp(conn, 200, "<a href=\"/connect\">Click here</a> to connecto to Spotify")
   end
 
-  def render(:connect, conn) do
+  def action(:connect, conn) do
     conn
     |> resp(:found, "")
-    |> put_resp_header("Location", Authentication.authorize_url())
+    |> put_resp_header("location", Authentication.authorize_url())
   end
 
-  def render(:callback, conn) do
+  def action(:callback, conn) do
     with {:ok, code} <- extract_code(conn),
-         {:ok, credentials} <- Authentication.auth(%Credentials{code: code}) do
-      case Absolutify.Dynamic.start_crawler(credentials) do
-        {:ok, _pid} ->
-          send_resp(
-            conn,
-            200,
-            "The songs are being inserted into the playlsit, you can close this page"
-          )
-
-        _error ->
-          send_resp(conn, 500, "It was not possible to start the server")
-      end
+         {:ok, credentials} <- Authentication.auth(%Credentials{code: code}),
+         {:ok, _pid} <- Dynamic.start_crawler(credentials) do
+      send_resp(
+        conn,
+        200,
+        "The application is saving the songs in the playlist. You can close this window"
+      )
     else
-      {:error, message} -> send_resp(conn, 400, message)
+      _error ->
+        send_resp(conn, 400, "It was not possible to connect to Spotify or start the application")
     end
   end
 

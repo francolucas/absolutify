@@ -11,11 +11,6 @@ defmodule Absolutify.Spotify.AuthenticationTest do
     Credentials
   }
 
-  setup_all do
-    Application.put_env(:absolutify, :code, "dR7gOOlpu8kku7MLdbEoGoU9eoEhedgaIxuCe6WT")
-    Application.put_env(:absolutify, :callback_url, "http://localhost")
-  end
-
   describe "Authentication.auth/0" do
     test "authenticates using a valid code" do
       with_mock AuthenticationRequest,

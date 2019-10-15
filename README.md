@@ -13,7 +13,7 @@ An Elixir app created for studies purpose that checks "real-time" the songs play
 
 ## Usage
 
-In `/config`, create a `config/secret.exs` file:
+In `/config`, create a `config/dev.exs` file:
 
 ```elixir
 use Mix.Config

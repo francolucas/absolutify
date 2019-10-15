@@ -33,4 +33,4 @@ config :absolutify,
   url: "http://localhost",
   port: 4002
 
-import_config "secret.exs"
+import_config "#{Mix.env()}.exs"

@@ -2,10 +2,12 @@ defmodule Absolutify.Mocks.Data do
   alias Absolutify.Spotify.Credentials
   alias Absolutify.Track
 
+  @spec track :: Track.t()
   def track do
     Track.new(1_552_058_700, "The Strokes", "Under Cover of Darkness")
   end
 
+  @spec credentials :: Credentials.t()
   def credentials do
     {:ok, credentials} =
       %{

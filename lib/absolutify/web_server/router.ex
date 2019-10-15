@@ -6,15 +6,15 @@ defmodule Absolutify.WebServer.Router do
   plug(:dispatch)
 
   get "/" do
-    Controller.render(:home, conn)
+    Controller.action(:home, conn)
   end
 
   get "/connect" do
-    Controller.render(:connect, conn)
+    Controller.action(:connect, conn)
   end
 
   get "/callback" do
-    Controller.render(:callback, conn)
+    Controller.action(:callback, conn)
   end
 
   match _ do
