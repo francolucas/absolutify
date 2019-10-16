@@ -8,10 +8,6 @@ defmodule Absolutify.Spotify.PlaylistTest do
   alias Absolutify.Spotify.{ApiRequest, Playlist}
   alias Absolutify.Track
 
-  setup_all do
-    Application.put_env(:absolutify, :playlist_id, "kDyL9bbsyq4OcQCYQhlM")
-  end
-
   describe "Playlist.add_track/2" do
     test "adds correctly the track in the playlist" do
       with_mock ApiRequest,

@@ -7,7 +7,7 @@ defmodule Absolutify.Track do
           artist: String.t(),
           title: String.t(),
           played_at: DateTime.t(),
-          spotify_uri: String.t()
+          spotify_uri: String.t() | nil
         }
 
   @spec new(integer | DateTime.t(), String.t(), String.t()) :: Track.t()
