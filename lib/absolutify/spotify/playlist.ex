@@ -1,5 +1,5 @@
 defmodule Absolutify.Spotify.Playlist do
-  alias Absolutify.Track
+  alias Absolutify.{Logger, Track}
   alias Absolutify.Spotify.{ApiRequest, Credentials, Responder}
 
   @spec add_track(Credentials.t(), Track.t()) :: {:ok, Track.t()} | {:error, any}
@@ -8,8 +8,10 @@ defmodule Absolutify.Spotify.Playlist do
 
   def add_track(
         %Credentials{} = credentials,
-        %Track{spotify_uri: spotify_uri} = track
+        %Track{spotify_uri: spotify_uri, artist: artist, title: title} = track
       ) do
+    Logger.info("Adding \"#{artist} - #{title}\" to the playlist on Spotify")
+
     with {:ok, response} <- do_request(credentials, spotify_uri),
          {:ok, _body} <- Responder.handle_response(response) do
       {:ok, track}

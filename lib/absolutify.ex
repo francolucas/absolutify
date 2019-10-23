@@ -3,9 +3,7 @@ defmodule Absolutify do
 
   alias Absolutify.Radio.AbsoluteRadio
   alias Absolutify.Spotify.{Authentication, Credentials, Playlist, Search}
-  alias Absolutify.{State, Track}
-
-  require Logger
+  alias Absolutify.{Logger, State, Track}
 
   @job_interval 60_000
 
@@ -35,9 +33,12 @@ defmodule Absolutify do
            {:ok, track} <- new_track?(state, track),
            {:ok, track} <- Search.track(credentials, track),
            {:ok, track} <- Playlist.add_track(credentials, track) do
-        Logger.info("Track inserted in the playlist: #{inspect(track)}")
         %State{credentials: credentials, latest_track_played_at: track.played_at}
       else
+        :tracked ->
+          Logger.info("No new track since the last check", :blue)
+          state
+
         error ->
           handle_error(error)
           state
@@ -53,11 +54,10 @@ defmodule Absolutify do
        ) do
     case latest_track_played_at != played_at do
       true -> {:ok, track}
-      false -> {:error, :tracked}
+      false -> :tracked
     end
   end
 
-  defp handle_error({:error, :tracked}), do: nil
   defp handle_error(error), do: Logger.error("Error: #{inspect(error)}")
 
   defp schedule_next_job, do: Process.send_after(self(), :job, @job_interval)

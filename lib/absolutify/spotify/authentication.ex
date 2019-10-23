@@ -1,4 +1,5 @@
 defmodule Absolutify.Spotify.Authentication do
+  alias Absolutify.Logger
   alias Absolutify.Spotify.{AuthenticationRequest, Credentials, Responder}
 
   @spec authorize_url() :: String.t()
@@ -28,6 +29,8 @@ defmodule Absolutify.Spotify.Authentication do
   end
 
   defp re_auth(%Credentials{} = credentials) do
+    Logger.info("Authenticating the user in Spotify")
+
     with {:ok, response} <- AuthenticationRequest.post(body(credentials)),
          {:ok, body} <- Responder.handle_response(response) do
       Credentials.new(body, credentials)
