@@ -8,14 +8,12 @@ defmodule Absolutify.Radio.RequestTest do
   describe "Request.post/0" do
     test "pass the correct parameters to the function" do
       with_mock HTTPoison,
-        post: fn url, body, headers -> %{url: url, body: body, headers: headers} end do
+        get: fn url -> %{url: url} end do
         expected = %{
-          url: "https://absoluteradio.co.uk/_ajax/recently-played.php",
-          body: "lastTime=#{:os.system_time(:second)}&serviceID=1&mode=more&searchTerm=",
-          headers: ["Content-Type": "application/x-www-form-urlencoded"]
+          url: "https://listenapi.planetradio.co.uk/api9/events/abr/now/48"
         }
 
-        assert ^expected = Request.post()
+        assert ^expected = Request.get()
       end
     end
   end

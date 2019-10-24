@@ -4,7 +4,7 @@ defmodule Absolutify.Mocks.Data do
 
   @spec track :: Track.t()
   def track do
-    Track.new(1_552_058_700, "The Strokes", "Under Cover of Darkness")
+    Track.new("2019-10-24 08:35:09", "The Strokes", "Under Cover of Darkness")
   end
 
   @spec credentials :: Credentials.t()

@@ -10,11 +10,13 @@ defmodule Absolutify.Track do
           spotify_uri: String.t() | nil
         }
 
-  @spec new(integer | DateTime.t(), String.t(), String.t()) :: Track.t()
-  def new(played_at, artist, title) when is_integer(played_at) do
-    played_at
-    |> DateTime.from_unix!(:second)
-    |> new(artist, title)
+  @spec new(String.t() | DateTime.t(), String.t(), String.t()) :: Track.t()
+  def new(played_at, artist, title) when is_binary(played_at) do
+    {:ok, datetime, 0} =
+      (played_at <> "Z")
+      |> DateTime.from_iso8601()
+
+    new(datetime, artist, title)
   end
 
   def new(%DateTime{} = played_at, artist, title) do
