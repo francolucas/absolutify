@@ -12,7 +12,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   @spec latest_tracks() :: {:ok, [Track.t()]} | {:error, any}
   def latest_tracks do
-    with {:ok, response} <- Request.post(),
+    with {:ok, response} <- Request.get(),
          {:ok, tracks} <- handle_response(response) do
       {:ok, tracks}
     else
@@ -28,7 +28,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   defp handle_response(_response), do: {:error, "Could not connect to the radio server."}
 
-  defp build_tracks({:ok, %{"events" => track_list}}) when is_list(track_list) do
+  defp build_tracks({:ok, track_list}) when is_list(track_list) do
     track_list
     |> Enum.map(&build_track/1)
     |> filter_track_list
@@ -37,9 +37,9 @@ defmodule Absolutify.Radio.AbsoluteRadio do
   defp build_tracks(_result), do: {:error, "Not expected result format from the radio server."}
 
   defp build_track(%{
-         "ArtistName" => artist,
-         "AllTrackTitle" => title,
-         "EventTimestamp" => played_at
+         "nowPlayingArtist" => artist,
+         "nowPlayingTrack" => title,
+         "nowPlayingTime" => played_at
        }) do
     Track.new(played_at, artist, title)
   end

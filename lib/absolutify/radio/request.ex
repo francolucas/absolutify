@@ -1,13 +1,8 @@
 defmodule Absolutify.Radio.Request do
-  @url "https://absoluteradio.co.uk/_ajax/recently-played.php"
-  @headers ["Content-Type": "application/x-www-form-urlencoded"]
+  @url "https://listenapi.planetradio.co.uk/api9/events/abr/now/48"
 
-  @spec post() :: {:ok | :error, any}
-  def post do
-    HTTPoison.post(@url, body(), @headers)
-  end
-
-  defp body do
-    "lastTime=#{:os.system_time(:second)}&serviceID=1&mode=more&searchTerm="
+  @spec get() :: {:ok | :error, any}
+  def get do
+    HTTPoison.get(@url)
   end
 end

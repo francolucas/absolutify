@@ -8,7 +8,14 @@ end
 
 defmodule Absolutify.RequestMock do
   # 20X responses
-  @spec get(:search_track_success | :track_not_found) :: {:ok, HTTPoison.Response.t()}
+  @spec get(
+          :search_track_success
+          | :track_not_found
+          | :empty_response_success
+          | :latest_tracks_invalid_list
+          | :latest_tracks_success
+          | :unexpected_error
+        ) :: {:ok, HTTPoison.Response.t()}
   def get(:search_track_success) do
     {:ok, search_track_success_response()}
   end
@@ -17,13 +24,26 @@ defmodule Absolutify.RequestMock do
     {:ok, track_not_found_response()}
   end
 
+  def get(:latest_tracks_success) do
+    {:ok, latest_tracks_response()}
+  end
+
+  def get(:latest_tracks_invalid_list) do
+    {:ok, latest_tracks_invalid_list_response()}
+  end
+
+  def get(:empty_response_success) do
+    {:ok, empty_response()}
+  end
+
+  def get(:unexpected_error) do
+    {:ok, failed_response_without_description()}
+  end
+
   @spec post(
           :added_to_playlist_success
           | :auth_invalid_code
           | :auth_success
-          | :empty_response_success
-          | :latest_tracks_invalid_list
-          | :latest_tracks_success
           | :refresh_token_success
           | :unexpected_error
         ) :: {:ok, HTTPoison.Response.t()}
@@ -33,18 +53,6 @@ defmodule Absolutify.RequestMock do
 
   def post(:refresh_token_success) do
     {:ok, refresh_token_success_response()}
-  end
-
-  def post(:latest_tracks_success) do
-    {:ok, latest_tracks_response()}
-  end
-
-  def post(:latest_tracks_invalid_list) do
-    {:ok, latest_tracks_invalid_list_response()}
-  end
-
-  def post(:empty_response_success) do
-    {:ok, empty_response()}
   end
 
   def post(:added_to_playlist_success) do
@@ -121,61 +129,30 @@ defmodule Absolutify.RequestMock do
 
   defp latest_tracks_response do
     %HTTPoison.Response{
-      body: "{\"events\":[{\"EventTimestamp\":1551038001,\"EventStart\":\"2019-02-24 19:53\",
-        \"EventPlayedDate\":\"Today\",\"EventTime\":\"7.53pm\",
-        \"Url\":\"\/music\/catfish-and-the-bottlemen-12295\/kathleen-21879\/\",
-        \"ArtistID\":\"12295\",\"ArtistName\":\"Catfish And The Bottlemen\",
-        \"AllTrackTitle\":\"Kathleen\",\"AllTrackID\":\"21879\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551037808,
-        \"EventStart\":\"2019-02-24 19:50\",\"EventPlayedDate\":\"Today\",
-        \"EventTime\":\"7.50pm\",\"Url\":\"\/music\/stereophonics-12\/a-thousand-trees-863\/\",
-        \"ArtistID\":\"12\",\"ArtistName\":\"Stereophonics\",\"AllTrackTitle\":\"A Thousand Trees\",
-        \"AllTrackID\":\"863\",\"iTunesTrackPreviewURL\":null,\"bonus\":0},{
-        \"EventTimestamp\":1551037565,\"EventStart\":\"2019-02-24 19:46\",
-        \"EventPlayedDate\":\"Today\",\"EventTime\":\"7.46pm\",
-        \"Url\":\"\/music\/foo-fighters-2754\/the-sky-is-a-neighborhood--27953\/\",
-        \"ArtistID\":\"2754\",\"ArtistName\":\"Foo Fighters\",
-        \"AllTrackTitle\":\"The Sky Is A Neighborhood \",\"AllTrackID\":\"27953\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551037500,
-        \"EventStart\":\"2019-02-24 19:45\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.45pm\",
-        \"Url\":\"\/music\/tom-odell-11573\/another-love-18466\/\",\"ArtistID\":\"11573\",
-        \"ArtistName\":\"Tom Odell\",\"AllTrackTitle\":\"Another Love\",\"AllTrackID\":\"18466\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":1},{\"EventTimestamp\":1551037004,
-        \"EventStart\":\"2019-02-24 19:36\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.36pm\",
-        \"Url\":\"\/music\/depeche-mode-203\/personal-jesus-12452\/\",\"ArtistID\":\"203\",
-        \"ArtistName\":\"Depeche Mode\",\"AllTrackTitle\":\"Personal Jesus\",
-        \"AllTrackID\":\"12452\",\"iTunesTrackPreviewURL\":null,\"bonus\":0},{
-        \"EventTimestamp\":1551036793,\"EventStart\":\"2019-02-24 19:33\",
-        \"EventPlayedDate\":\"Today\",\"EventTime\":\"7.33pm\",
-        \"Url\":\"\/music\/the-libertines-9135\/dont-look-back-into-the-sun-559\/\",
-        \"ArtistID\":\"9135\",\"ArtistName\":\"The Libertines\",
-        \"AllTrackTitle\":\"Don't Look Back Into The Sun\",\"AllTrackID\":\"559\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551036536,
-        \"EventStart\":\"2019-02-24 19:28\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.28pm\",
-        \"Url\":\"\/music\/the-smiths-569\/there-is-a-light-that-never-goes-out-7661\/\",
-        \"ArtistID\":\"569\",\"ArtistName\":\"The Smiths\",
-        \"AllTrackTitle\":\"There Is A Light That Never Goes Out\",\"AllTrackID\":\"7661\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551036300,
-        \"EventStart\":\"2019-02-24 19:25\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.25pm\",
-        \"Url\":\"\/music\/awolnation-11274\/sail-16517\/\",\"ArtistID\":\"11274\",
-        \"ArtistName\":\"AWOLNATION\",\"AllTrackTitle\":\"Sail\",\"AllTrackID\":\"16517\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":1},{\"EventTimestamp\":1551035859,
-        \"EventStart\":\"2019-02-24 19:17\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.17pm\",
-        \"Url\":\"\/music\/metallica-71\/enter-sandman-3568\/\",\"ArtistID\":\"71\",
-        \"ArtistName\":\"Metallica\",\"AllTrackTitle\":\"Enter Sandman\",\"AllTrackID\":\"3568\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551035563,
-        \"EventStart\":\"2019-02-24 19:12\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.12pm\",
-        \"Url\":\"\/music\/doves-304\/pounding-47\/\",\"ArtistID\":\"304\",\"ArtistName\":\"Doves\",
-        \"AllTrackTitle\":\"Pounding\",\"AllTrackID\":\"47\",\"iTunesTrackPreviewURL\":null,
-        \"bonus\":0},{\"EventTimestamp\":1551035355,\"EventStart\":\"2019-02-24 19:09\",
-        \"EventPlayedDate\":\"Today\",\"EventTime\":\"7.09pm\",
-        \"Url\":\"\/music\/fleetwood-mac-404\/little-lies-1627\/\",\"ArtistID\":\"404\",
-        \"ArtistName\":\"Fleetwood Mac\",\"AllTrackTitle\":\"Little Lies\",\"AllTrackID\":\"1627\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551035111,
-        \"EventStart\":\"2019-02-24 19:05\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"7.05pm\",
-        \"Url\":\"\/music\/aerosmith-45\/livin-on-the-edge-7230\/\",\"ArtistID\":\"45\",
-        \"ArtistName\":\"Aerosmith\",\"AllTrackTitle\":\"Livin' On The Edge\",
-        \"AllTrackID\":\"7230\",\"iTunesTrackPreviewURL\":null,\"bonus\":0}],\"template\":\"\"}",
+      body:
+        "[{\"nowPlayingTrackId\":3747,\"nowPlayingTrack\":\"Fluorescent Adolescent\",
+        \"nowPlayingArtist\":\"Arctic Monkeys\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/artist/1-1/320x320/3959.jpg?ver=1465084749\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/artist/1-1/160x160/3959.jpg?ver=1465084749\",
+        \"nowPlayingTime\":\"2019-10-24 06:27:48\",\"nowPlayingDuration\":165,\"nowPlayingAppleMusicUrl\":
+        \"https://geo.itunes.apple.com/dk/album/251126923?i=251126957\"},{\"nowPlayingTrackId\":2075,
+        \"nowPlayingTrack\":\"Children Of The Revolution\",\"nowPlayingArtist\":\"T Rex\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/track/2075.jpg?ver=1464804454\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/track/160x160/2075.jpg?ver=1464804454\",
+        \"nowPlayingTime\":\"2019-10-24 06:23:16\",\"nowPlayingDuration\":137,
+        \"nowPlayingAppleMusicUrl\":\"https://geo.itunes.apple.com/dk/album/262705985?i=262706295\"},{
+        \"nowPlayingTrackId\":157093,\"nowPlayingTrack\":\"Bust This Town\",
+        \"nowPlayingArtist\":\"Stereophonics\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/artist/1-1/320x320/117.jpg?ver=1465083215\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/artist/1-1/160x160/117.jpg?ver=1465083215\",
+        \"nowPlayingTime\":\"2019-10-24 06:14:38\",\"nowPlayingDuration\":240,
+        \"nowPlayingAppleMusicUrl\":\"https://geo.itunes.apple.com/dk/album/1475933493?i=1475933511\"},{
+        \"nowPlayingTrackId\":15122,\"nowPlayingTrack\":\"Live And Let Die\",
+        \"nowPlayingArtist\":\"Guns N Roses\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/artist/1-1/320x320/664.jpg?ver=1465083551\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/artist/1-1/160x160/664.jpg?ver=1465083551\",
+        \"nowPlayingTime\":\"2019-10-24 06:08:58\",\"nowPlayingDuration\":180,
+        \"nowPlayingAppleMusicUrl\":\"https://geo.itunes.apple.com/dk/album/68192941?i=68193108\"}]",
       headers: [],
       status_code: 200
     }
@@ -183,18 +160,23 @@ defmodule Absolutify.RequestMock do
 
   defp latest_tracks_invalid_list_response do
     %HTTPoison.Response{
-      body: "{\"events\":[{\"EventTimestamp\":1551106093,\"EventStart\":\"2019-02-25 14:48\",
-        \"EventPlayedDate\":\"Today\",\"EventTime\":\"2.48pm\",
-        \"Url\":\"/music/the-jam-392/thats-entertainment-303/\",\"ArtistID\":\"392\",
-        \"AllTrackTitle\":\"That's Entertainment\",\"AllTrackID\":\"303\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0},{\"EventTimestamp\":1551105900,
-        \"EventStart\":\"2019-02-25 14:45\",\"EventPlayedDate\":\"Today\",\"EventTime\":\"2.45pm\",
-        \"Url\":\"/music/the-kinks-373/sunny-afternoon-287/\",\"ArtistID\":\"373\",
-        \"ArtistName\":\"The Kinks\",\"AllTrackID\":\"287\",\"iTunesTrackPreviewURL\":null,
-        \"bonus\":1},{\"EventStart\":\"2019-02-25 14:44\",\"EventPlayedDate\":\"Today\",
-        \"EventTime\":\"2.44pm\",\"Url\":\"/music/coldplay-743/paradise-16582/\",\"ArtistID\":\"743\",
-        \"ArtistName\":\"Coldplay\",\"AllTrackTitle\":\"Paradise\",\"AllTrackID\":\"16582\",
-        \"iTunesTrackPreviewURL\":null,\"bonus\":0}],\"template\":\"\"}",
+      body:
+        "[{\"nowPlayingTrackId\":3747,\"nowPlayingTrack\":\"Fluorescent Adolescent\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/artist/1-1/320x320/3959.jpg?ver=1465084749\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/artist/1-1/160x160/3959.jpg?ver=1465084749\",
+        \"nowPlayingTime\":\"2019-10-24 06:27:48\",\"nowPlayingDuration\":165,\"nowPlayingAppleMusicUrl\":
+        \"https://geo.itunes.apple.com/dk/album/251126923?i=251126957\"},{\"nowPlayingTrackId\":2075,
+        \"nowPlayingArtist\":\"T Rex\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/track/2075.jpg?ver=1464804454\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/track/160x160/2075.jpg?ver=1464804454\",
+        \"nowPlayingTime\":\"2019-10-24 06:23:16\",\"nowPlayingDuration\":137,
+        \"nowPlayingAppleMusicUrl\":\"https://geo.itunes.apple.com/dk/album/262705985?i=262706295\"},{
+        \"nowPlayingTrackId\":157093,\"nowPlayingTrack\":\"Bust This Town\",
+        \"nowPlayingArtist\":\"Stereophonics\",
+        \"nowPlayingImage\":\"https://assets.planetradio.co.uk/artist/1-1/320x320/117.jpg?ver=1465083215\",
+        \"nowPlayingSmallImage\":\"https://assets.planetradio.co.uk/artist/1-1/160x160/117.jpg?ver=1465083215\",
+        \"nowPlayingDuration\":240,
+        \"nowPlayingAppleMusicUrl\":\"https://geo.itunes.apple.com/dk/album/1475933493?i=1475933511\"}]",
       headers: [],
       status_code: 200
     }
