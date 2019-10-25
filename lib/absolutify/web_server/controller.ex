@@ -6,7 +6,7 @@ defmodule Absolutify.WebServer.Controller do
 
   @spec action(:callback | :connect | :home, Plug.Conn.t()) :: Plug.Conn.t()
   def action(:home, conn) do
-    send_resp(conn, 200, "<a href=\"/connect\">Click here</a> to connecto to Spotify")
+    send_resp(conn, 200, "<a href=\"/connect\">Click here</a> to connect to Spotify")
   end
 
   def action(:connect, conn) do

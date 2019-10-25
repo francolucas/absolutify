@@ -1,4 +1,5 @@
 defmodule Absolutify.Spotify.Credentials do
+  alias Absolutify.Logger
   alias Absolutify.Spotify.Credentials
 
   defstruct [:access_token, :code, :refresh_token, :valid_until]
@@ -29,11 +30,18 @@ defmodule Absolutify.Spotify.Credentials do
   end
 
   @spec is_expired?(Credentials.t()) :: boolean
-  def is_expired?(%Credentials{valid_until: nil}), do: true
-
-  def is_expired?(%Credentials{valid_until: valid_until}) do
+  def is_expired?(%Credentials{valid_until: %DateTime{} = valid_until}) do
     now = :os.system_time(:seconds) |> DateTime.from_unix!(:second)
-    now > valid_until
+
+    case now > valid_until do
+      false -> false
+      true -> is_expired?(%Credentials{})
+    end
+  end
+
+  def is_expired?(_credentials) do
+    Logger.info("User credentials are expired")
+    true
   end
 
   defp refresh_token(credentials, %{"refresh_token" => refresh_token}) do

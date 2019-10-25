@@ -7,8 +7,8 @@ An Elixir app created for studies purpose that checks "real-time" the songs play
 
 ## Requirements
 
-- Elixir 1.7
 - [A registered Spotify App](https://developer.spotify.com/documentation/general/guides/app-settings/#register-your-app)
+  - Set `http://localhost:4002/callback` as Redirect URI
 - A playlist ID from Spotify where the songs will be inserted into
 
 ## Usage

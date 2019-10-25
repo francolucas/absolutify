@@ -19,14 +19,14 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
     test "returns an expected error when it can not connect to the radio server" do
       with_mock Request,
         get: fn -> RequestMock.get(:unexpected_error) end do
-        assert {:error, "Could not connect to the radio server."} = AbsoluteRadio.latest_tracks()
+        assert {:error, "Could not connect to the radio server"} = AbsoluteRadio.latest_tracks()
       end
     end
 
     test "returns an expected error when the radio server response is invalid" do
       with_mock Request,
         get: fn -> RequestMock.get(:empty_response_success) end do
-        assert {:error, "Not expected result format from the radio server."} =
+        assert {:error, "Not expected result format from the radio server"} =
                  AbsoluteRadio.latest_tracks()
       end
     end
@@ -34,7 +34,7 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
     test "returns an expected error when there is no valid track in the list from the radio" do
       with_mock Request,
         get: fn -> RequestMock.get(:latest_tracks_invalid_list) end do
-        assert {:error, "There is no valid track in this request to the radio server."} =
+        assert {:error, "There is no valid track in this request to the radio server"} =
                  AbsoluteRadio.latest_tracks()
       end
     end
@@ -54,7 +54,7 @@ defmodule Absolutify.Radio.AbsoluteRadioTest do
     test "returns an expected error when it can not connect to the radio server" do
       with_mock Request,
         get: fn -> RequestMock.get(:unexpected_error) end do
-        assert {:error, "Could not connect to the radio server."} = AbsoluteRadio.latest_track()
+        assert {:error, "Could not connect to the radio server"} = AbsoluteRadio.latest_track()
       end
     end
   end

@@ -1,6 +1,6 @@
 defmodule Absolutify.Radio.AbsoluteRadio do
   alias Absolutify.Radio.Request
-  alias Absolutify.Track
+  alias Absolutify.{Logger, Track}
 
   @spec latest_track() :: {:ok, Track.t()} | {:error, any}
   def latest_track do
@@ -12,12 +12,17 @@ defmodule Absolutify.Radio.AbsoluteRadio do
 
   @spec latest_tracks() :: {:ok, [Track.t()]} | {:error, any}
   def latest_tracks do
-    with {:ok, response} <- Request.get(),
+    with {:ok, response} <- request_latest_tracks(),
          {:ok, tracks} <- handle_response(response) do
       {:ok, tracks}
     else
       error -> error
     end
+  end
+
+  defp request_latest_tracks do
+    Logger.info("Requesting the latest tracks from Absolute Radio", :blue)
+    Request.get()
   end
 
   defp handle_response(%HTTPoison.Response{body: response, status_code: 200}) do
@@ -26,7 +31,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
     |> build_tracks()
   end
 
-  defp handle_response(_response), do: {:error, "Could not connect to the radio server."}
+  defp handle_response(_response), do: {:error, "Could not connect to the radio server"}
 
   defp build_tracks({:ok, track_list}) when is_list(track_list) do
     track_list
@@ -34,7 +39,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
     |> filter_track_list
   end
 
-  defp build_tracks(_result), do: {:error, "Not expected result format from the radio server."}
+  defp build_tracks(_result), do: {:error, "Not expected result format from the radio server"}
 
   defp build_track(%{
          "nowPlayingArtist" => artist,
@@ -52,7 +57,7 @@ defmodule Absolutify.Radio.AbsoluteRadio do
       |> Enum.filter(&(!is_nil(&1)))
 
     case track_list do
-      [] -> {:error, "There is no valid track in this request to the radio server."}
+      [] -> {:error, "There is no valid track in this request to the radio server"}
       _ -> {:ok, track_list}
     end
   end
