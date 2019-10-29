@@ -1,6 +1,6 @@
-defmodule Absolutify.WebServer.Router do
+defmodule Absolutify.Web.Router do
   use Plug.Router
-  alias Absolutify.WebServer.Controller
+  alias Absolutify.Web.Controller
   plug(Plug.Logger)
   plug(:match)
   plug(:dispatch)
@@ -18,6 +18,6 @@ defmodule Absolutify.WebServer.Router do
   end
 
   match _ do
-    send_resp(conn, 404, "Oops... Nothing here :(")
+    Controller.action(:notfound, conn)
   end
 end

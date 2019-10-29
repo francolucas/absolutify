@@ -1,4 +1,4 @@
-defmodule Absolutify.WebServer.RouterTest do
+defmodule Absolutify.Web.RouterTest do
   use ExUnit.Case, async: true
   use Plug.Test
 
@@ -6,7 +6,7 @@ defmodule Absolutify.WebServer.RouterTest do
 
   alias Absolutify.{AuthenticationMock, Dynamic, DynamicMock}
   alias Absolutify.Spotify.Authentication
-  alias Absolutify.WebServer.Router
+  alias Absolutify.Web.Router
 
   @opts Router.init([])
 

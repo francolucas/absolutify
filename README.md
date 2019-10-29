@@ -40,11 +40,9 @@ Once you authorize the app to access your playlist, in each minute, Absolutify w
 ## Next steps
 
 - Write more tests.
-- Style on the pages "/" and "/callback".
 - Possibility to switch between other Absolute Radios (Classic Rock, 60s, etc).
 - Since Absolute Radio returns a list of the latest played songs, parse the songs and connect to the Radio less often.
 - Separate the `GenServer` in two: one checking the played songs and another one to search and add the song in the Spotify playlist.
 - Better error handling.
-- Better logs.
 - Deploy in a cloud server.
 - Check if the song already exists in the playlist to avoid repeated songs.

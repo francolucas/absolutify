@@ -5,7 +5,7 @@ defmodule Absolutify.Application do
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
-        plug: Absolutify.WebServer.Router,
+        plug: Absolutify.Web.Router,
         options: [port: Application.get_env(:absolutify, :port)]
       ),
       {Absolutify.Dynamic, name: Absolutify.Dynamic}
