@@ -1,6 +1,6 @@
 defmodule Absolutify.WebServer.Controller do
   import Plug.Conn
-  alias Absolutify.Dynamic
+  alias Absolutify.{Dynamic, Logger}
   alias Absolutify.Spotify.{Authentication, Credentials}
   alias Plug.Conn.Query
 
@@ -22,18 +22,23 @@ defmodule Absolutify.WebServer.Controller do
       send_resp(
         conn,
         200,
-        "The application is saving the songs in the playlist. You can close this window"
+        "The application is saving the songs in the playlist. You can close this window now"
       )
     else
-      _error ->
+      error ->
+        Logger.error("Error: #{inspect(error)}")
         send_resp(conn, 400, "It was not possible to connect to Spotify or start the application")
     end
   end
 
   defp extract_code(conn) do
     case Query.decode(conn.query_string) do
-      %{"code" => code} -> {:ok, code}
-      _ -> {:error, "The application was not authorized"}
+      %{"code" => code} ->
+        {:ok, code}
+
+      error ->
+        Logger.error("Error: #{inspect(error)}")
+        {:error, "The application was not authorized"}
     end
   end
 end
