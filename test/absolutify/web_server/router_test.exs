@@ -4,7 +4,7 @@ defmodule Absolutify.WebServer.RouterTest do
 
   import Mock
 
-  alias Absolutify.{AuthenticationMock, Dynamic, DynamicMock}
+  alias Absolutify.{AuthenticationMock, Dynamic, DynamicSupervisorMock}
   alias Absolutify.Spotify.Authentication
   alias Absolutify.WebServer.Router
 
@@ -36,8 +36,7 @@ defmodule Absolutify.WebServer.RouterTest do
       with_mocks([
         {Authentication, [],
          auth: fn _credentials -> AuthenticationMock.auth(:valid_credentials) end},
-        {Dynamic, [],
-         start_crawler: fn _credentials -> DynamicMock.start_crawler(:credentials) end}
+        {DynamicSupervisor, [], start_child: fn _module, _credentials -> {:ok, :pid} end}
       ]) do
         conn = conn(:get, "/callback?code=valid_code")
         conn = Router.call(conn, @opts)
